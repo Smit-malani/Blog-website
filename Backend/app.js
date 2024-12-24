@@ -1,9 +1,14 @@
 const express = require('express');
-const connectDB = require('./DB/db.js')
+const connectDB = require('./DB/db.js');
 const app = express();
-app.use(express.json());
+const userRoutes = require('./routes/userRoutes.js')
+const cors = require('cors');
+
 connectDB()
 
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 //blogs routes
 const blogs = []
 app.get('/blogs', (req, res) => {
@@ -70,51 +75,56 @@ app.delete('/blogs/:id', (req, res) => {
    
 })
 
+app.use('/users',userRoutes)
+
 //users routes
-const users = [] 
+// app.post('/user',async(req,res)=>{
+//     try {
+//         const {name, email, password} = req.body
+//         if(!name && !email && !password ){
+//             return res.status(400).json({message : 'Please enter all details',success: false})
+//         }else{
+//             const newUser = await userModel.create({
+//                 name,
+//                 email,
+//                 password
+//             })
+//             return res.status(201).json({message: 'user created successfully', success:true,newUser})
+//         }    
+//     } catch (err) {
+//         console.log(err)
+//         res.status(500).json({ message: 'Internal Server Error', success: false });
+//     }
+// })
 
-app.post('/user',(req,res)=>{
-    try {
-        const {name, email, password} = req.body
-        if(!name && !email && !password ){
-            return res.status(400).json({message : 'Please enter all details',success: false})
-        }else{
-            users.push({...req.body , id: users.length + 1})
-            return res.status(201).json({message: 'user created successfully', success:true})
-        }    
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ message: 'Internal Server Error', success: false });
-    }
-})
 
-app.get('/user',(req,res)=>{
-    try {
-        if(users.length === 0){
-            return res.status(400).json({message: 'No Users', success: false})
-        }else{
-            return res.status(200).json({users,message: 'users fetch successfully'})
-        }  
-    } catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: 'Internal Server Error', success: false });
-    }
-})
+// app.get('/user',(req,res)=>{
+//     try {
+//         if(users.length === 0){
+//             return res.status(400).json({message: 'No Users', success: false})
+//         }else{
+//             return res.status(200).json({users,message: 'users fetch successfully'})
+//         }  
+//     } catch (err) {
+//         console.log(err)
+//         return res.status(500).json({ message: 'Internal Server Error', success: false });
+//     }
+// })
 
-app.get('/user/:id',(req,res)=>{
-    try {
-        const {id} = req.params
-        const searchedUser = users.filter(user => user.id == id)
-        if(searchedUser.length === 0 ){
-            return res.status(404).json({message: 'No Such User Found', success: false})
-        }else{
-            return res.status(200).json({searchedUser, message: 'Searched user'})
-        }
-    } catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: 'Internal Server Error', success: false });
-    }
-})
+// app.get('/user/:id',(req,res)=>{
+//     try {
+//         const {id} = req.params
+//         const searchedUser = users.filter(user => user.id == id)
+//         if(searchedUser.length === 0 ){
+//             return res.status(404).json({message: 'No Such User Found', success: false})
+//         }else{
+//             return res.status(200).json({searchedUser, message: 'Searched user'})
+//         }
+//     } catch (err) {
+//         console.log(err)
+//         return res.status(500).json({ message: 'Internal Server Error', success: false });
+//     }
+// })
 
 app.patch('/user/:id',(req,res)=>{
     try {
@@ -126,7 +136,7 @@ app.patch('/user/:id',(req,res)=>{
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 })
-
+   
 app.delete('/user/:id',(req,res)=>{
     try {
         const index = users.findIndex(user => user.id == req.params.id)
