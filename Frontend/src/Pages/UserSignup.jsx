@@ -18,7 +18,7 @@ function UserSignup(){
         password
       }
       try {
-        const res = await axios.post("http://localhost:3000/users/register",userData)
+        const res = await axios.post("http://localhost:3000/api/v1/register",userData)
         if(res.status === 201){
           const data = res.data
           setUser(data.user) 
@@ -37,7 +37,7 @@ function UserSignup(){
 
     return (
         <div className='w-screen h-screen flex items-center justify-center'>
-          <form onSubmit={(e)=>submitHandler(e)} className='flex flex-col items-center gap-10 lg:w-1/2'>
+          <form onSubmit={(e)=>submitHandler(e)} className='flex flex-col w-full items-center gap-10 lg:w-1/2 md:w-full'>
               <h1 className='text-4xl font-bold'>Sign up</h1>
               <div className='flex flex-col w-1/2 gap-4'>
                 <input onChange={(e)=>setName(e.target.value)} value={name} required type='text' placeholder='Enter name' className='px-3 py-2 rounded-md focus:outline-none border-2 focus:border-black'/>

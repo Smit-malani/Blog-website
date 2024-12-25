@@ -19,7 +19,14 @@ module.exports.getUserById = (id)=>{
     return searchedUser
 } 
 
-module.exports.updateUser = (id,data)=>{
-    const updatedUser = userModel.findByIdAndUpdate(id,data)
+module.exports.updateUser = (id,updates)=>{
+
+    const updatedUser = userModel.findByIdAndUpdate(id,{$set:updates},{new:true, runValidators: true})    
     return updatedUser
+}
+
+module.exports.deleteUser = (id)=>{
+    
+    const deletedUser = userModel.findByIdAndDelete(id)
+    return  deletedUser 
 }
