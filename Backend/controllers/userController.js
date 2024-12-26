@@ -1,5 +1,7 @@
 const userModel = require('../models/userModel')
 const userServices = require('../services/userServices')
+const bcrypt = require('bcrypt')
+
 
 module.exports.registerUser = async(req,res,next)=>{
     try {
@@ -12,6 +14,7 @@ module.exports.registerUser = async(req,res,next)=>{
         if(!(existingUser == null)){
             res.status(400).json({message: 'User Alredy Register With This Email'})
         }else{
+            
             const user = await userServices.createUser(
                 name,
                 email,
@@ -19,6 +22,29 @@ module.exports.registerUser = async(req,res,next)=>{
             )
             res.status(201).json({user})
         }
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ message: 'Internal Server Error', success: false })
+    }
+}
+
+module.exports.loginUser = async(req,res,next)=>{
+    try {
+        const {email,password} = req.body
+        if(!email || !password){
+            return res.status(400).json({message : 'Please enter all details',success: false})
+        }
+        const isEmailCorrect = await userModel.findOne({email})
+        if(!isEmailCorrect){
+            res.status(400).json({message: 'Please Enter currect Email Or Password' ,success: false})
+        }else{
+            const isPasswordCorrect = await bcrypt.compare(password,existingUser.password)
+            if(!isPasswordCorrect){
+                res.status(401).json({message: 'Please Enter currect Email Or Password', success: false})
+            }else{
+                res.status(201).json({existingUser,message: 'logged In successfully', success: true})
+            }
+        }        
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: 'Internal Server Error', success: false })
