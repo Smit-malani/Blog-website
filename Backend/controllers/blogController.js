@@ -1,3 +1,4 @@
+const userModel = require('../models/userModel')
 const blogServices = require('../services/blogServices')
 
 module.exports.getBlog = async(req,res,next)=>{
@@ -31,18 +32,22 @@ module.exports.getBlogById = async(req,res,next)=>{
 
 module.exports.createBlog =  async(req,res,next)=>{
     try {
-        const {title,description,draft} = req.body
+        const {title,description,draft,creater} = req.body
         if(!title && !description && !draft){
             return res.status(400).json({message : 'Please enter all details',success: false})
         }
-
-        const blog = await blogServices.createBlog(title,description,draft)
-        if(blog.length === 0){
-            return res.status(404).json({message: 'Blog Not Created', success: false})
+        const isUSer = await blogServices.isUser(creater)
+        if(!isUSer){
+            return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
         }else{
-            return res.status(201).json({blog,message: 'Blog created successfully', success: true})
+            const blog = await blogServices.createBlog(title,description,draft,creater)
+            if(blog.length === 0){
+                return res.status(404).json({message: 'Blog Not Created', success: false})
+            }else{
+                await userModel.findByIdAndUpdate(creater,{$push : {blogs: blog._id}})
+                return res.status(201).json({blog,message: 'Blog created successfully', success: true})
+            }
         }
-
     } catch (err) {
         console.error(err) 
         return res.status(500).json({ message: 'Internal Server Error', success: false });

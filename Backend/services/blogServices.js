@@ -1,7 +1,8 @@
 const blogModel = require('../models/blogModel')
+const userModel = require('../models/userModel')
 
 module.exports.getAllBlogs = ()=>{
-    const blogs = blogModel.find()
+    const blogs = blogModel.find({draft : false}).populate({path:"creater",select : "-password"})
     return blogs
 }
 
@@ -10,12 +11,14 @@ module.exports.getBlogById = (id)=>{
     return blog
 }
 
-module.exports.createBlog = (title,description,draft)=>{
+module.exports.createBlog = (title,description,draft,creater)=>{
     const blog = blogModel.create({
         title,
         description,
-        draft
+        draft,
+        creater
     })
+    
     return blog
 }
 
@@ -27,4 +30,9 @@ module.exports.updateBlog = (id,updates)=>{
 module.exports.deleteBlog = (id)=>{
     const deletedBlog = blogModel.findByIdAndDelete(id)
     return deletedBlog
+}
+
+module.exports.isUser = (creater)=>{
+    const isUser = userModel.findById(creater)
+    return isUser
 }

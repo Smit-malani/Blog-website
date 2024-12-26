@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const userSchema = new mongoose.Schema({
     name:{
         type: String,
-        required: true,
+        required: true, 
         minlenght: [3, 'name at leat have three characters']
     },
     email:{
@@ -15,7 +15,13 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         required: true
-    }
+    },
+    blogs : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'blog'
+        }
+    ]
 })
 
 const userModel = mongoose.model('user',userSchema)

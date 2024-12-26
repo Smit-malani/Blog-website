@@ -13,6 +13,11 @@ const blogSchema = new mongoose.Schema({
     draft : {
         type : Boolean,
         default : false
+    },
+    creater : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'user',
+        required: true
     }
 },{
     timestamps: true

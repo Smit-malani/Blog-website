@@ -10,7 +10,7 @@ module.exports.createUser= (name,email,password)=>{
 }
 
 module.exports.getAllUsers = ()=>{
-    const users = userModel.find()
+    const users = userModel.find().populate("blogs")
     return users
 }
 
