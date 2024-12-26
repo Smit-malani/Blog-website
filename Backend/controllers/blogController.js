@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel')
 const blogServices = require('../services/blogServices')
+const { verifyJwtToken } = require('../utils/verifyJwtToken')
 
 module.exports.getBlog = async(req,res,next)=>{
     try {
@@ -7,7 +8,7 @@ module.exports.getBlog = async(req,res,next)=>{
         if(blogs.length === 0){
             return res.status(404).json({message: 'No Blog found', success: false})
         }else{
-            res.status(200).json({blogs, message: 'Blogs Found Successfully',success: true}) 
+            res.status(200).json({blog: blogs, message: 'Blogs Found Successfully',success: true}) 
         }
     } catch (err) {
         console.error(err) 
@@ -22,7 +23,7 @@ module.exports.getBlogById = async(req,res,next)=>{
         if(!searchedBlog){
             return res.status(404).json({message: 'No Such Blog found', success: false})
         }else{
-            res.status(200).json({searchedBlog, message: 'Blogs Found Successfully',success: true})
+            res.status(200).json({blog: searchedBlog, message: 'Blogs Found Successfully',success: true})
         }
     } catch (err) {
         console.error(err) 
@@ -32,6 +33,10 @@ module.exports.getBlogById = async(req,res,next)=>{
 
 module.exports.createBlog =  async(req,res,next)=>{
     try {
+        const isValid = await verifyJwtToken(req.body.token)
+        if(!isValid){
+            return res.status(200).json({message: 'Please Sigh-In', success: false})
+        }
         const {title,description,draft,creater} = req.body
         if(!title && !description && !draft){
             return res.status(400).json({message : 'Please enter all details',success: false})
@@ -45,7 +50,7 @@ module.exports.createBlog =  async(req,res,next)=>{
                 return res.status(404).json({message: 'Blog Not Created', success: false})
             }else{
                 await userModel.findByIdAndUpdate(creater,{$push : {blogs: blog._id}})
-                return res.status(201).json({blog,message: 'Blog created successfully', success: true})
+                return res.status(201).json({blog: blog, message: 'Blog created successfully', success: true})
             }
         }
     } catch (err) {
@@ -66,7 +71,7 @@ module.exports.updateBlog = async(req,res,next)=>{
         if(!updatedBlog){
             return res.status(404).json({ message: 'Blog not found', success: false })
         }else{
-            return res.status(200).json({updatedBlog,message:'Blog Updated Successfully', success: true})
+            return res.status(200).json({blog: updatedBlog, message:'Blog Updated Successfully', success: true})
         }
     } catch (err) {
         console.error(err) 

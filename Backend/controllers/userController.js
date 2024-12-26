@@ -1,26 +1,24 @@
 const userModel = require('../models/userModel')
 const userServices = require('../services/userServices')
 const bcrypt = require('bcrypt')
+const { generateJwtToken } = require('../utils/generateJwtToken')
 
 
 module.exports.registerUser = async(req,res,next)=>{
     try {
         const {name,email,password} = req.body
         if(!name && !email && !password){
-            return res.status(400).json({message : 'Please enter all details',success: false})
+            return res.status(400).json({message : 'Please enter all details', success: false})
         }
 
         const existingUser = await userModel.findOne({email})        
         if(!(existingUser == null)){
             res.status(400).json({message: 'User Alredy Register With This Email'})
         }else{
-            
-            const user = await userServices.createUser(
-                name,
-                email,
-                password
-            )
-            res.status(201).json({user})
+            const newUser = await userServices.createUser(name, email, password)
+            const jwtToken = await generateJwtToken({email: newUser.email, id: newUser._id})
+            const userWithoutPassword = await userModel.findById(newUser._id).select('-password');
+            res.status(201).json({user: userWithoutPassword, token: jwtToken, message: 'User registeret successfully', success: false})
         }
     } catch (err) {
         console.error(err)
@@ -32,17 +30,19 @@ module.exports.loginUser = async(req,res,next)=>{
     try {
         const {email,password} = req.body
         if(!email || !password){
-            return res.status(400).json({message : 'Please enter all details',success: false})
+            return res.status(400).json({message : 'Please enter all details', success: false})
         }
-        const isEmailCorrect = await userModel.findOne({email})
-        if(!isEmailCorrect){
-            res.status(400).json({message: 'Please Enter currect Email Or Password' ,success: false})
+        const existingUser = await userModel.findOne({email})
+        if(!existingUser){
+            res.status(400).json({message: 'Please Enter currect Email Or Password', success: false})
         }else{
-            const isPasswordCorrect = await bcrypt.compare(password,existingUser.password)
+            const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
+            const jwtToken = await generateJwtToken({email: existingUser.email, id: existingUser._id})
+            const userWithoutPassword = await userModel.findById(existingUser._id).select('-password');
             if(!isPasswordCorrect){
                 res.status(401).json({message: 'Please Enter currect Email Or Password', success: false})
             }else{
-                res.status(201).json({existingUser,message: 'logged In successfully', success: true})
+                res.status(201).json({user: userWithoutPassword, token: jwtToken, message: 'logged In successfully', success: true})
             }
         }        
     } catch (err) {
@@ -58,7 +58,7 @@ module.exports.getAllUsers = async(req, res, next)=>{
             return res.status(404).json({message: 'No users found', success: false})
         }
         else{
-            res.status(200).json({users, message: 'User Found Successfully',success: true})        
+            res.status(200).json({user:users, message: 'User Found Successfully', success: true})        
         }
     } catch (err) {
         console.error(err) 
@@ -73,7 +73,7 @@ module.exports.getUserById= async(req, res, next)=>{
         if(searchedUser.length === 0){
             return res.status(404).json({message: 'No Such User Found', success: false})
         }else{
-            return res.status(200).json({searchedUser, message:'User Found Successfully', success: true})
+            return res.status(200).json({user: searchedUser, message:'User Found Successfully', success: true})
         }
     } catch (err) {
         console.error(err) 
@@ -93,7 +93,7 @@ module.exports.ChangeUserDetails = async(req, res, next)=>{
         if(!updatedUser){
             return res.status(404).json({ message: 'User not found', success: false })
         }
-        return res.status(200).json({updatedUser,message:'User Updated Successfully', success: true})
+        return res.status(200).json({user: updatedUser,message:'User Updated Successfully', success: true})
     } catch (err) {
         console.error(err) 
         return res.status(500).json({ message: 'Internal Server Error', success: false });
