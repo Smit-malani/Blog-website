@@ -112,3 +112,27 @@ module.exports.deleteBlog = async(req,res,next)=>{
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }
+
+module.exports.likeBlog = async(req, res, next)=>{
+    try {
+        const {id} = req.params
+        const creater = req.user
+
+        const blog = await blogModel.findById(id)
+        if(blog == null){
+            return res.status(404).json({ message: 'Blog not found', success: false })
+        }
+        if(blog.likes.includes(creater)){
+            await blogModel.findByIdAndUpdate(id,{$pull: {likes: creater}})
+            return res.status(200).json({message: 'Blog Unliked successfuly', success: true})
+        }else{
+            await blogModel.findByIdAndUpdate(id,{$push: {likes: creater}})
+            return res.status(200).json({message: 'Blog Liked successfuly', success: true})
+        }
+
+
+
+    } catch (err) {
+        
+    }
+}

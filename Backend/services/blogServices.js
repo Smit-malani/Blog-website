@@ -2,7 +2,7 @@ const blogModel = require('../models/blogModel')
 const userModel = require('../models/userModel')
 
 module.exports.getAllBlogs = ()=>{
-    const blogs = blogModel.find({draft : false}).populate({path:"creater",select : "-password"})
+    const blogs = blogModel.find({draft : false}).populate({path:"creater", select : "-password"}).populate({path:"likes", select: "name email"})
     return blogs
 }
 

@@ -13,4 +13,7 @@ router.patch('/blog/:id', verifyUser, blogController.updateBlog)
 
 router.delete('/blog/:id', verifyUser, blogController.deleteBlog)
 
+router.post('/blog/like/:id', verifyUser, blogController.likeBlog)
+
+
 module.exports = router
