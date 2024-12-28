@@ -9,8 +9,8 @@ router.get('/blog/:id', blogController.getBlogById)
 
 router.post('/blog',verifyUser, blogController.createBlog)
 
-router.patch('/blog/:id', blogController.updateBlog)
+router.patch('/blog/:id', verifyUser, blogController.updateBlog)
 
-router.delete('/blog/:id', blogController.deleteBlog)
+router.delete('/blog/:id', verifyUser, blogController.deleteBlog)
 
 module.exports = router

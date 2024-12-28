@@ -21,7 +21,6 @@ module.exports.registerUser = async(req,res,next)=>{
             res.status(201).json({user: {user:userWithoutPassword,token: jwtToken}, message: 'User registeret successfully', success: false})
         }
     } catch (err) {
-        console.error(err)
         res.status(500).json({ message: 'Internal Server Error', success: false })
     }
 }
@@ -46,7 +45,6 @@ module.exports.loginUser = async(req,res,next)=>{
             }
         }        
     } catch (err) {
-        console.error(err)
         res.status(500).json({ message: 'Internal Server Error', success: false })
     }
 }
@@ -61,7 +59,6 @@ module.exports.getAllUsers = async(req, res, next)=>{
             res.status(200).json({user:users, message: 'User Found Successfully', success: true})        
         }
     } catch (err) {
-        console.error(err) 
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }
@@ -76,7 +73,6 @@ module.exports.getUserById= async(req, res, next)=>{
             return res.status(200).json({user: searchedUser, message:'User Found Successfully', success: true})
         }
     } catch (err) {
-        console.error(err) 
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }
@@ -95,7 +91,6 @@ module.exports.ChangeUserDetails = async(req, res, next)=>{
         }
         return res.status(200).json({user: updatedUser,message:'User Updated Successfully', success: true})
     } catch (err) {
-        console.error(err) 
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }
@@ -109,7 +104,6 @@ module.exports.deleteUser = async(req,res,next)=>{
         }
         res.status(200).json({message: 'User deleted successfullty', success: true})
     } catch (err) {
-        console.error(err) 
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }

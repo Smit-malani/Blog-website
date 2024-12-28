@@ -3,10 +3,7 @@ import React, { useEffect, useState } from 'react'
 import {Navigate} from 'react-router-dom'
 
 function CreateBlog() {
-
-  // useEffect(()=>{
-
-  // },[])
+  
   let user = JSON.parse(localStorage.getItem('user'))
   
   if(!user){
