@@ -18,7 +18,7 @@ module.exports.registerUser = async(req,res,next)=>{
             const newUser = await userServices.createUser(name, email, password)
             const jwtToken = await generateJwtToken({email: newUser.email, id: newUser._id})
             const userWithoutPassword = await userModel.findById(newUser._id).select('-password');
-            res.status(201).json({user: userWithoutPassword, token: jwtToken, message: 'User registeret successfully', success: false})
+            res.status(201).json({user: {user:userWithoutPassword,token: jwtToken}, message: 'User registeret successfully', success: false})
         }
     } catch (err) {
         console.error(err)

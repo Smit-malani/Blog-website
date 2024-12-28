@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 
 function UserSignup(){
-    const[user,setUser] = useState(null)
+    const[user,setUser] = useState([])
     const[name,setName] = useState('')
     const[email,setEmail] = useState('')
     const[password, setPassword] = useState('')
@@ -21,9 +21,10 @@ function UserSignup(){
         const res = await axios.post("http://localhost:3000/api/v1/register",userData)
         if(res.status === 201){
           const data = res.data
-          setUser(data.user) 
-          alert("registration successful")
-        }
+          setUser(data.user)
+          localStorage.setItem("user",JSON.stringify(data.user))
+          alert("Account created successfully")
+        }        
       } catch (err) {
         alert(err.response.data.message || "An error occurred") 
       }
@@ -33,7 +34,6 @@ function UserSignup(){
         setPassword('')
       
     }
-
 
     return (
         <div className='w-screen h-screen flex items-center justify-center'>

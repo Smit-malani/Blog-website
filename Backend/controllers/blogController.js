@@ -33,15 +33,17 @@ module.exports.getBlogById = async(req,res,next)=>{
 
 module.exports.createBlog =  async(req,res,next)=>{
     try {
-        const isValid = await verifyJwtToken(req.body.token)
-        if(!isValid){
-            return res.status(200).json({message: 'Please Sigh-In', success: false})
-        }
-        const {title,description,draft,creater} = req.body
+
+        const creater = req.user        
+        
+        const {title,description,draft} = req.body
+        
         if(!title && !description && !draft){
             return res.status(400).json({message : 'Please enter all details',success: false})
         }
+        
         const isUSer = await blogServices.isUser(creater)
+        
         if(!isUSer){
             return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
         }else{
