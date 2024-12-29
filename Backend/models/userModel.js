@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
             type : mongoose.Schema.Types.ObjectId,
             ref : 'blog'
         }
-    ]
+    ],
 })
 
 const userModel = mongoose.model('user',userSchema)
