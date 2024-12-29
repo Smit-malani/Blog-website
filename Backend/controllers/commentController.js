@@ -5,7 +5,7 @@ const commentServices = require("../services/commentServices")
 
 module.exports.addComment = async(req,res,next)=>{
     try {
-        const {id} = req.params
+        const {id} = req.params 
         const creater = req.user
         const {comment} = req.body
 
@@ -15,7 +15,7 @@ module.exports.addComment = async(req,res,next)=>{
         }else{
             const isUser = await userModel.findById(creater)
             if(!isUser){
-                return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
+                return res.status(401).json({message: 'You are not unauthorized, please Sign-Up', success: false})
             }
             else{
                 const addComment = await commentServices.createComment(comment,id,creater)
@@ -39,10 +39,10 @@ module.exports.deleteComment = async(req,res,next)=>{
 
         const comment = await commentModel.findById(id).populate({path: "blog", select: "creater"})
         if(!comment){
-            return res.status(401).json({message: 'Comment Not Found'})
+            return res.status(401).json({message: 'Comment Not Found', success: false})
         }
         if(comment.user != userId && comment.blog.creater != userId){
-            return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
+            return res.status(401).json({message: 'You are not unauthorized, please Sign-Up', success: false})
          }else{
             const deleteComment = await commentServices.deleteComment(id)    
             if(!deleteComment){
@@ -55,4 +55,53 @@ module.exports.deleteComment = async(req,res,next)=>{
     } catch (err) {        
         return res.status(500).json({ message: 'Internal Server Error', success: false })
     }   
+}
+
+module.exports.editComment = async(req,res,next)=>{
+    try {
+        
+        const {id} = req.params 
+        const creater = req.user
+        const {updateComment} = req.body
+        
+        const comment = await commentModel.findById(id)
+        if(!comment){
+            return res.status(404).json({message: 'comment Not found', success: false})
+        }
+
+        if(comment.user != creater){
+            return res.status(401).json({message: 'You are not unauthorized, please Sign-Up', success: false})
+        }else{
+            const editedComment = await commentServices.editComment(id, updateComment)
+            if(!editedComment){
+                return res.status(404).json({message: 'comment Not Ediited', success: false})
+            }else{
+                return res.status(201).json({comment: editedComment, message: 'comment edited successfuly', success: true})
+            }
+        }
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal Server Error', success: false })
+    }   
+}
+
+module.exports.likeComment = async(req, res, next)=>{
+    try {
+        const {id} = req.params
+        const users = req.user
+
+        const comment = await commentModel.findById(id)
+        if(comment == null){
+            return res.status(404).json({message: 'Comment Not Found', success: false})
+        }
+        if(comment.likes.includes(users)){
+            await commentModel.findByIdAndUpdate(id,{$pull: {likes: users}})
+            return res.status(200).json({message: 'comment Unliked successfuly', success: true})
+        }else{
+            await commentModel.findByIdAndUpdate(id, {$push: {likes: users}})
+            return res.status(200).json({message: 'comment Liked successfuly', success: true})
+        }
+
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal Server Error', success: false })
+    }
 }

@@ -20,6 +20,12 @@ router.post('/blog/comment/:id', verifyUser, commentController.addComment)
 
 router.delete('/blog/comment/:id', verifyUser, commentController.deleteComment)
 
+router.patch('/blog/comment/:id', verifyUser, commentController.editComment)
+
+router.post('/blog/comment/like/:id', verifyUser, commentController.likeComment)
+
+
+
 
 
 
