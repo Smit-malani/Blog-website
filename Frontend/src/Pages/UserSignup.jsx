@@ -1,6 +1,9 @@
 import React from "react";
 import axios from 'axios'
-import { useState } from 'react'
+import { useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import toast from "react-hot-toast";
+
 
 
 function UserSignup(){
@@ -8,8 +11,7 @@ function UserSignup(){
     const[name,setName] = useState('')
     const[email,setEmail] = useState('')
     const[password, setPassword] = useState('')
-    
-  
+    const Navigate = useNavigate()
     async function submitHandler(e){
       e.preventDefault()  
       const userData = {
@@ -23,15 +25,15 @@ function UserSignup(){
           const data = res.data
           setUser(data.user)
           localStorage.setItem("user",JSON.stringify(data.user))
-          alert("Account created successfully")
+          toast.success("Account created successfully")
+          Navigate('/')
         }        
       } catch (err) {
-        alert(err.response.data.message || "An error occurred") 
+        toast.error(err.response.data.message || "An error occurred")
       }
-         
       setName('')
-        setEmail('')
-        setPassword('')
+      setEmail('')
+      setPassword('')
       
     }
 

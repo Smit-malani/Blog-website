@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 function Blogs() {
 
@@ -15,7 +16,7 @@ function Blogs() {
                 
             }
         } catch (err) {
-            alert(err.response.data.message || "An error occurred") 
+            toast.error(err.response.data.message || "An error occurred")
         }
     }
     useEffect(()=>{

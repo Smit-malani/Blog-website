@@ -9,14 +9,15 @@ function App() {
  
 
   return (
-    <Routes>
-      <Route path='/' element={<Blogs/>}></Route>
-      <Route path='/signup' element={<UserSignup/>}></Route>
-      <Route path='/login' element={<UserLogin/>}></Route>
-      <Route path='/create-blog' element={<CreateBlog/>}></Route>
-    </Routes>
+    <div className='bg-[#f1f1f1] w-screen h-screen'>
+      <Routes>
+        <Route path='/' element={<Blogs/>}></Route>
+        <Route path='/signup' element={<UserSignup/>}></Route>
+        <Route path='/login' element={<UserLogin/>}></Route>
+        <Route path='/create-blog' element={<CreateBlog/>}></Route>
+      </Routes>
+    </div>
   )
 }
-{/* <UserSignup/> */}
 
 export default App

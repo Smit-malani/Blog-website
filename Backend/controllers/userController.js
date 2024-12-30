@@ -28,6 +28,7 @@ module.exports.registerUser = async(req,res,next)=>{
 module.exports.loginUser = async(req,res,next)=>{
     try {
         const {email,password} = req.body
+
         if(!email || !password){
             return res.status(400).json({message : 'Please enter all details', success: false})
         }
@@ -41,7 +42,7 @@ module.exports.loginUser = async(req,res,next)=>{
             if(!isPasswordCorrect){
                 res.status(401).json({message: 'Please Enter currect Email Or Password', success: false})
             }else{
-                res.status(201).json({user: userWithoutPassword, token: jwtToken, message: 'logged In successfully', success: true})
+                res.status(200).json({user:{user: userWithoutPassword, token: jwtToken}, message: 'logged In successfully', success: true})
             }
         }        
     } catch (err) {
