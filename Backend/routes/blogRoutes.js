@@ -3,12 +3,13 @@ const router = express.Router()
 const blogController = require('../controllers/blogController')
 const commentController = require('../controllers/commentController')
 const { verifyUser } = require('../middlewares/auth')
+const upload = require('../utils/multer')
 
 router.get('/blogs', blogController.getBlog)
 
 router.get('/blog/:id', blogController.getBlogById)
 
-router.post('/blog',verifyUser, blogController.createBlog)
+router.post('/blog',verifyUser, upload.single("image"), blogController.createBlog)
 
 router.patch('/blog/:id', verifyUser, blogController.updateBlog)
 

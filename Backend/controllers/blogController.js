@@ -1,7 +1,9 @@
 const blogModel = require('../models/blogModel')
 const userModel = require('../models/userModel')
 const blogServices = require('../services/blogServices')
-const { verifyJwtToken } = require('../utils/verifyJwtToken')
+const { deleteImageCloud } = require('../utils/deleteImage')
+const { uploadImage } = require('../utils/uploadImage')
+const fs = require('fs')
 
 module.exports.getBlog = async(req,res,next)=>{
     try {
@@ -32,21 +34,19 @@ module.exports.getBlogById = async(req,res,next)=>{
 
 module.exports.createBlog =  async(req,res,next)=>{
     try {
-
-        const creater = req.user        
-        
+        const creater = req.user         
         const {title,description,draft} = req.body
-        
+        const image = req.file        
         if(!title && !description && !draft){
             return res.status(400).json({message : 'Please enter all details',success: false})
         }
-        
         const isUSer = await blogServices.isUser(creater)
-        
         if(!isUSer){
             return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
         }else{
-            const blog = await blogServices.createBlog(title,description,draft,creater)
+            const {secure_url, public_id} = await  uploadImage(image.path) 
+            fs.unlinkSync(image.path)
+            const blog = await blogServices.createBlog(title,description,draft,creater, secure_url, public_id)
             if(blog.length === 0){
                 return res.status(404).json({message: 'Blog Not Created', success: false})
             }else{
@@ -67,12 +67,10 @@ module.exports.updateBlog = async(req,res,next)=>{
         if(!title && !description){
             return res.status(400).json({ message: 'At least one field must be provided to update', success: false })
         }
-
         const isBlog = await blogModel.findById(id)
         if(isBlog == null){
             return res.status(404).json({ message: 'Blog not found', success: false })
         }
-        
         if(!(creater == isBlog.creater)){
             return res.status(401).json({message: 'you are not authorized for this action', success: false})
         }else{
@@ -100,6 +98,8 @@ module.exports.deleteBlog = async(req,res,next)=>{
         if(!(creater == isBlog.creater)){
             return res.status(401).json({message: 'you are not authorized for this action', success: false})
         }else{
+
+            await deleteImageCloud(isBlog.imageId)
             const result = await blogServices.deleteBlog(id)
             await userModel.findByIdAndUpdate(creater,{$pull : {blogs : id}})
             if(!result){

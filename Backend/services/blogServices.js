@@ -11,13 +11,15 @@ module.exports.getBlogById = (id)=>{
     return blog
 }
 
-module.exports.createBlog = (title,description,draft,creater)=>{
+module.exports.createBlog = (title, description, draft, creater, secure_url, public_id)=>{
     const blog = blogModel.create({
         title,
         description,
         draft,
-        creater
-    })
+        creater,
+        image: secure_url,
+        imageId: public_id
+    })   
     
     return blog
 }
