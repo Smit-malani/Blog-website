@@ -1,14 +1,14 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function UserLogin() {
     const[user,setUser] = useState({})
 
     const[email,setEmail] = useState('')
     const[password, setPassword] = useState('')
-    const Navigate = useNavigate()
+    const navigate = useNavigate()
     async function submitHandler(e){
       e.preventDefault()  
       const userData = {
@@ -23,7 +23,7 @@ function UserLogin() {
           setUser(data.user)
           localStorage.setItem("user", JSON.stringify(data.user))
           toast.success("Account Logged-In successfully")
-          Navigate('/')
+          navigate('/')
         }        
       } catch (err) {
         toast.error(err.response?.data?.message || "An error occurred")
@@ -33,8 +33,10 @@ function UserLogin() {
       
     }
 
+
+
     return (
-        <div className='w-screen h-screen flex items-center justify-center'>
+        <div className='w-screen h-screen flex flex-col items-center justify-start mt-20 gap-3'>
           <form onSubmit={(e)=>submitHandler(e)} className='flex flex-col w-full items-center gap-10 lg:w-1/2 md:w-full'>
               <h1 className='text-4xl font-bold'>Login</h1>
               <div className='flex flex-col w-1/2 gap-4'>
@@ -43,6 +45,7 @@ function UserLogin() {
                 <button className='bg-blue-600 px-3 py-2 rounded-md text-white font-semibold hover:bg-blue-700'>Login</button>
               </div>
           </form>
+          <p className='text-xs'>Don't have an Account? <Link to={'/signup'} className='font-medium text-blue-600 cursor-pointer underline text-sm'>Create Account</Link></p>
         </div>
       )
 }
