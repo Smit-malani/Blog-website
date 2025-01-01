@@ -5,6 +5,7 @@ import Home from './components/Home'
 import UserLogin from './Pages/UserLogin'
 import CreateBlog from './components/CreateBlog'
 import Navbar from './components/Navbar'
+import BlogPage from './Pages/BlogPage'
 
 function App() {
  
@@ -16,6 +17,7 @@ function App() {
           <Route path='/signup' element={<UserSignup/>}></Route>
           <Route path='/login' element={<UserLogin/>}></Route>
           <Route path='/create-blog' element={<CreateBlog/>}></Route>
+          <Route path='/blog/:id' element={<BlogPage/>}></Route>
         </Route>
       </Routes>
     </div>

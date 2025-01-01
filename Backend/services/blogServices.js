@@ -6,19 +6,20 @@ module.exports.getAllBlogs = ()=>{
     return blogs
 }
 
-module.exports.getBlogById = (id)=>{
-    const blog = blogModel.findById(id).populate({path: "comment", populate: {path: "user", select: "name email"}})
+module.exports.getBlogById = (blogId)=>{
+    const blog = blogModel.findOne({blogId}).populate({path: "comment", populate: {path: "user", select: "name email"}}).populate({path: "creater", select: "name email"})        
     return blog
 }
 
-module.exports.createBlog = (title, description, draft, creater, secure_url, public_id)=>{
+module.exports.createBlog = (title, description, draft, creater, secure_url, public_id, blogId)=>{
     const blog = blogModel.create({
         title,
         description,
         draft,
         creater,
         image: secure_url,
-        imageId: public_id
+        imageId: public_id,
+        blogId
     })   
     
     return blog

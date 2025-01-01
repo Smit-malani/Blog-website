@@ -7,7 +7,7 @@ const upload = require('../utils/multer')
 
 router.get('/blogs', blogController.getBlog)
 
-router.get('/blog/:id', blogController.getBlogById)
+router.get('/blog/:blogId', blogController.getBlogById)
 
 router.post('/blog',verifyUser, upload.single("image"), blogController.createBlog)
 

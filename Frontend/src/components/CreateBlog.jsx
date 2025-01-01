@@ -34,7 +34,7 @@ function CreateBlog() {
         toast.success("Blog created successfully")
         navigate('/')
       }        
-    } catch (err) {
+    } catch (err) {      
       toast.error(err.response.data.message || "An error occurred") 
     }
     setTitle('')

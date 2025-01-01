@@ -4,6 +4,8 @@ const blogServices = require('../services/blogServices')
 const { deleteImageCloud } = require('../utils/deleteImage')
 const { uploadImage } = require('../utils/uploadImage')
 const fs = require('fs')
+const ShortUniqueId = require('short-unique-id')
+const {randomUUID} = new ShortUniqueId({ length: 10 });
 
 module.exports.getBlog = async(req,res,next)=>{
     try {
@@ -20,14 +22,15 @@ module.exports.getBlog = async(req,res,next)=>{
 
 module.exports.getBlogById = async(req,res,next)=>{
     try {
-        const {id} = req.params
-        const searchedBlog = await blogServices.getBlogById(id)
+        const {blogId} = req.params        
+        const searchedBlog = await blogServices.getBlogById(blogId)
+    
         if(!searchedBlog){
             return res.status(404).json({message: 'No Such Blog found', success: false})
         }else{
             res.status(200).json({blog: searchedBlog, message: 'Blogs Found Successfully',success: true})
         }
-    } catch (err) {
+    } catch (err) {    
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }
@@ -36,18 +39,20 @@ module.exports.createBlog =  async(req,res,next)=>{
     try {
         const creater = req.user         
         const {title,description,draft} = req.body
-        const image = req.file       
-         
+        const image = req.file     
+        
         if(!title && !description && !draft){
             return res.status(400).json({message : 'Please enter all details',success: false})
         }
-        const isUSer = await blogServices.isUser(creater)
+        const isUSer = await blogServices.isUser(creater)        
         if(!isUSer){
             return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
         }else{
+            const blogId = title.toLowerCase().split(" ").join("-")+ "-" + randomUUID()
+            console.log(blogId)
             const {secure_url, public_id} = await  uploadImage(image.path) 
             fs.unlinkSync(image.path)
-            const blog = await blogServices.createBlog(title,description,draft,creater, secure_url, public_id)
+            const blog = await blogServices.createBlog(title,description,draft,creater, secure_url, public_id,blogId)
             if(blog.length === 0){
                 return res.status(404).json({message: 'Blog Not Created', success: false})
             }else{
@@ -56,6 +61,8 @@ module.exports.createBlog =  async(req,res,next)=>{
             }
         }
     } catch (err) {
+        console.log(err);
+        
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }
