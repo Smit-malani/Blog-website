@@ -8,9 +8,8 @@ import Navbar from './components/Navbar'
 
 function App() {
  
-
   return (
-    <div className='bg-[#f1f1f1] w-screen h-screen'>
+    <div className='bg-[#f1f1f1] w-screen h-screen overflow-x-hidden'>
       <Routes>
         <Route path='/' element={<Navbar/>}>
           <Route path='/' element={<Home/>}></Route>

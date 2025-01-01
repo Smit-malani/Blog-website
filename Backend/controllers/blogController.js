@@ -36,7 +36,8 @@ module.exports.createBlog =  async(req,res,next)=>{
     try {
         const creater = req.user         
         const {title,description,draft} = req.body
-        const image = req.file        
+        const image = req.file       
+         
         if(!title && !description && !draft){
             return res.status(400).json({message : 'Please enter all details',success: false})
         }
