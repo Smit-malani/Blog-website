@@ -18,6 +18,7 @@ function App() {
           <Route path='/login' element={<UserLogin/>}></Route>
           <Route path='/create-blog' element={<CreateBlog/>}></Route>
           <Route path='/blog/:id' element={<BlogPage/>}></Route>
+          <Route path='/edit/:id' element={<CreateBlog/>}></Route>
         </Route>
       </Routes>
     </div>

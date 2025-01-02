@@ -7,6 +7,5 @@ module.exports.deleteImageCloud = async(imageId)=>{
         return result
     } catch (err) {
         console.log("error",err)
-
     }
 }

@@ -24,6 +24,7 @@ function UserSignup(){
         if(res.status === 201){
           const data = res.data
           setUser(data.user)
+          localStorage.clear()
           localStorage.setItem("user",JSON.stringify(data.user))
           toast.success("Account created successfully")
           navigate('/')

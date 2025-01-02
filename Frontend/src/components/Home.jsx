@@ -38,7 +38,7 @@ function Home() {
                                 <h2 className='text-sm'>{blog?.creater?.name}</h2>
                             </div>
                             <div className='cursor-pointer'>
-                                <h1 className='font-bold text-2xl w-5/6 '>{blog?.title}</h1>
+                                <h1 className='font-bold text-2xl min-w-5/6'>{blog?.title}</h1>
                                 <p className='opacity-80 mt-3 h-12 overflow-hidden w-[90%] line-clamp-2'>{blog.description}</p>
                             </div>
                             <div className='flex items-center justify-start gap-7'>

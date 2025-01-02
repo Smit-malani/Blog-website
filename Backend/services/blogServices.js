@@ -26,7 +26,7 @@ module.exports.createBlog = (title, description, draft, creater, secure_url, pub
 }
 
 module.exports.updateBlog = (id,updates)=>{
-    const updatedBlog = blogModel.findByIdAndUpdate(id,{$set:updates},{new:true, runValidators: true})
+    const updatedBlog = blogModel.findOneAndUpdate({blogId : id},{$set:updates},{new:true, runValidators: true})
     return updatedBlog
 }
 

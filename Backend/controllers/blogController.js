@@ -49,7 +49,6 @@ module.exports.createBlog =  async(req,res,next)=>{
             return res.status(401).json({message: 'You are not unauthorized, please Sign-Up'})
         }else{
             const blogId = title.toLowerCase().split(" ").join("-")+ "-" + randomUUID()
-            console.log(blogId)
             const {secure_url, public_id} = await  uploadImage(image.path) 
             fs.unlinkSync(image.path)
             const blog = await blogServices.createBlog(title,description,draft,creater, secure_url, public_id,blogId)
@@ -68,27 +67,37 @@ module.exports.createBlog =  async(req,res,next)=>{
 }
 
 module.exports.updateBlog = async(req,res,next)=>{
-    try {
+    try {        
         const {id} = req.params
         const creater = req.user
         const {title,description, draft} = req.body
+        const image = req.file
+        
         if(!title && !description){
             return res.status(400).json({ message: 'At least one field must be provided to update', success: false })
         }
-        const isBlog = await blogModel.findById(id)
+        const isBlog = await blogModel.findOne({blogId: id})
+        
         if(isBlog == null){
             return res.status(404).json({ message: 'Blog not found', success: false })
         }
+                
         if(!(creater == isBlog.creater)){
             return res.status(401).json({message: 'you are not authorized for this action', success: false})
         }else{
-            const updatedBlog = await blogServices.updateBlog(id,{title,description, draft})
-            if(!updatedBlog){
-                return res.status(404).json({ message: 'Blog not found', success: false })
-            }else{
-                return res.status(200).json({blog: updatedBlog, message:'Blog Updated Successfully', success: true})
+            if(image){
+                await deleteImageCloud(isBlog.imageId)
+                const {secure_url, public_id} = await  uploadImage(image.path) 
+                fs.unlinkSync(image.path)
+                const updatedBlog = await blogServices.updateBlog(id,{title,description, draft, image: secure_url, imageId:public_id })
+                if(!updatedBlog){
+                    return res.status(404).json({ message: 'Blog not found', success: false })
+                }else{
+                    return res.status(200).json({blog: updatedBlog, message:'Blog Updated Successfully', success: true})
+                }
             }
-        }
+        } 
+
     } catch (err) {
         return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
@@ -96,7 +105,7 @@ module.exports.updateBlog = async(req,res,next)=>{
 
 module.exports.deleteBlog = async(req,res,next)=>{
     try {
-        const {id} = req.params
+        const {id} = req.params 
         const creater = req.user
         const isBlog = await blogModel.findById(id)
         if(isBlog == null){

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { AiOutlineLike } from "react-icons/ai"
 import { FaRegComment } from "react-icons/fa6";
 import toast from 'react-hot-toast';
@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 function BlogPage() {
 
     const {id} = useParams()
+    
     const[blogData, setBlogData] = useState(null)    
     async function fetchBlogById(){
         try {
@@ -29,7 +30,7 @@ function BlogPage() {
     <div className='w-full min-h-screen flex justify-center'>
         {
             blogData ? <div className='w-[55%] h-full flex flex-col'>
-                <div className='title mt-12 w-full'>
+                <div className='title mt-12 w-full '>
                     <h1 className='font-bold text-5xl opacity-80'>{blogData.title}</h1>
                 </div>
                 <div className='profile flex items-center justify-start w-full mt-8 gap-4'>
@@ -58,6 +59,9 @@ function BlogPage() {
                     <img className='object-fill h-full w-full' src={blogData.image} alt="" />
                 </div>
                 <div></div>
+                <div className='w-full flex items-center justify-center'>
+                    <Link to={`/edit/${blogData.blogId}` } className='bg-blue-600 hover:bg-blue-700 w-1/3 my-5 text-white font-semibold text-lg rounded-md px-5 py-2'>Edit Blog</Link>
+                </div>    
             </div> : <h1>Loading....</h1>
         }
     </div>

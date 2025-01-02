@@ -11,7 +11,7 @@ router.get('/blog/:blogId', blogController.getBlogById)
 
 router.post('/blog',verifyUser, upload.single("image"), blogController.createBlog)
 
-router.patch('/blog/:id', verifyUser, blogController.updateBlog)
+router.patch('/blog/:id', verifyUser,  upload.single("image"), blogController.updateBlog)
 
 router.delete('/blog/:id', verifyUser, blogController.deleteBlog)
 

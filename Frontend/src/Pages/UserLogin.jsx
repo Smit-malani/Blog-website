@@ -21,6 +21,7 @@ function UserLogin() {
         if(res.status === 200){
           const data = res.data
           setUser(data.user)
+          localStorage.clear()
           localStorage.setItem("user", JSON.stringify(data.user))
           toast.success("Account Logged-In successfully")
           navigate('/')
