@@ -17,7 +17,7 @@ function UserLogin() {
       }
       
       try {
-        const res = await axios.post("http://localhost:3000/api/v1/login",userData)        
+        const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/login`,userData)        
         if(res.status === 200){
           const data = res.data
           setUser(data.user)

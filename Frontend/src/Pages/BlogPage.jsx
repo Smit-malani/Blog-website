@@ -11,7 +11,7 @@ function BlogPage() {
     const[blogData, setBlogData] = useState(null)    
     async function fetchBlogById(){
         try {
-            const res = await axios.get(`http://localhost:3000/api/v1/blog/${id}`)
+            const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/blog/${id}`)
             if(res.status === 200){
                 setBlogData(res.data.blog)  
             }

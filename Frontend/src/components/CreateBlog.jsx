@@ -27,7 +27,7 @@ function CreateBlog() {
     }    
     
     try {      
-      const res = await axios.post("http://localhost:3000/api/v1/blog", blogData, {headers: {"Content-Type": "multipart/form-data",Authorization: `Bearer ${user.token}`}})      
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/blog`, blogData, {headers: {"Content-Type": "multipart/form-data",Authorization: `Bearer ${user.token}`}})      
       if(res.status === 201){
         const data = res.data
         setBlog(data.blog)

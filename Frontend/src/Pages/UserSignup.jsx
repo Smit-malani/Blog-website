@@ -20,7 +20,7 @@ function UserSignup(){
         password
       }
       try {
-        const res = await axios.post("http://localhost:3000/api/v1/register",userData)
+        const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/register`,userData)
         if(res.status === 201){
           const data = res.data
           setUser(data.user)

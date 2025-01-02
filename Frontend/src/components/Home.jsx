@@ -11,7 +11,7 @@ function Home() {
 
     async function fetchBlogs(){
         try {
-            let res = await axios.get("http://localhost:3000/api/v1/blogs")
+            let res = await axios.get(`${import.meta.env.VITE_BASE_URL}/blogs`)
             if(res.status === 200){
                 const data = res.data
                 setBlogs(data.blog)
