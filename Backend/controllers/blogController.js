@@ -135,21 +135,18 @@ module.exports.likeBlog = async(req, res, next)=>{
         const {id} = req.params
         const creater = req.user
 
-        const blog = await blogModel.findById(id)
+        const blog = await blogModel.findOne({blogId: id})
         if(blog == null){
             return res.status(404).json({ message: 'Blog not found', success: false })
         }
         if(blog.likes.includes(creater)){
-            await blogModel.findByIdAndUpdate(id,{$pull: {likes: creater}})
+            await blogModel.findOneAndUpdate({blogId: id},{$pull: {likes: creater}})
             return res.status(200).json({message: 'Blog Unliked successfuly', success: true})
         }else{
-            await blogModel.findByIdAndUpdate(id,{$push: {likes: creater}})
+            await blogModel.findOneAndUpdate({blogId: id},{$push: {likes: creater}})
             return res.status(200).json({message: 'Blog Liked successfuly', success: true})
         }
-
-
-
     } catch (err) {
-        
+        return res.status(500).json({ message: 'Internal Server Error', success: false });
     }
 }

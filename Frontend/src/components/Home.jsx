@@ -48,7 +48,7 @@ function Home() {
                                 </div>
                                 <div className='flex items-center gap-1'>
                                     <AiOutlineLike className='text-base'/>
-                                    <p className='text-xs opacity-70 font-medium'>{blog.likes ? 0 : blog.likes }</p>
+                                    <p className='text-xs opacity-70 font-medium'>{blog.likes.length }</p>
                                 </div>
                                 <div  className='flex items-center gap-1'>
                                     <FaRegComment className='text-base'/>
