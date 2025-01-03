@@ -2,14 +2,17 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import {Navigate, useNavigate, useParams} from 'react-router-dom'
 import toast from "react-hot-toast";
+import { useSelector } from 'react-redux';
 
 
 function CreateBlog() {
   
   const {id} = useParams()  
   
-  let user = JSON.parse(localStorage.getItem('user'))    
-  if(!user){
+  let {token, user} = useSelector(slice => slice.user) 
+  const data = useSelector(slice => slice.currentBlog) 
+      
+  if(!token){
     return <Navigate to={"/signup"}/>
   }  
 
@@ -29,7 +32,7 @@ function CreateBlog() {
 
     if(id){
       try{
-        const res = await axios.patch(`${import.meta.env.VITE_BASE_URL}/blog/${id}`, blogData, {headers: {"Content-Type": "multipart/form-data",Authorization: `Bearer ${user.token}`}})
+        const res = await axios.patch(`${import.meta.env.VITE_BASE_URL}/blog/${id}`, blogData, {headers: {"Content-Type": "multipart/form-data",Authorization: `Bearer ${token}`}})
         if(res.status === 200){
           toast.success("Blog Updated successfully")
           navigate('/')
@@ -39,7 +42,7 @@ function CreateBlog() {
       }
     }else{
       try {      
-        const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/blog`, blogData, {headers: {"Content-Type": "multipart/form-data",Authorization: `Bearer ${user.token}`}})      
+        const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/blog`, blogData, {headers: {"Content-Type": "multipart/form-data",Authorization: `Bearer ${token}`}})      
         if(res.status === 201){
           const data = res.data
           setBlog(data.blog) 
@@ -57,16 +60,9 @@ function CreateBlog() {
   }
 
   async function fetchBlogById(){
-    try {
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/blog/${id}`)
-        if(res.status === 200){
-          setTitle(res.data.blog.title)
-          setDescription(res.data.blog.description)
-          setImage(res.data.blog.image)
-        }
-    }catch (err) {            
-        toast.error(err.response.data.message || "An error occurred")
-    }
+          setTitle(data.title)
+          setDescription(data.description)
+          setImage(data.image)
 }
 
 useEffect(()=>{

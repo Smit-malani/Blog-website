@@ -1,28 +1,42 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigationType, useParams } from 'react-router-dom'
 import { AiOutlineLike } from "react-icons/ai"
 import { FaRegComment } from "react-icons/fa6";
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSelectedBlog, removeSelectedBlog } from '../utils/slices/selectedBlogSlice';
 
 function BlogPage() {
 
     const {id} = useParams()
+    const dispatch = useDispatch()
+    const {token, user} = useSelector(slice => slice.user)
+    const navigationType = useNavigationType()
     
-    const[blogData, setBlogData] = useState(null)    
+    const[blogData, setBlogData] = useState(null) 
+       
     async function fetchBlogById(){
         try {
             const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/blog/${id}`)
             if(res.status === 200){
-                setBlogData(res.data.blog)  
-            }
-        }catch (err) {            
+                const data = res.data                
+                setBlogData(data.blog)                                  
+                dispatch(addSelectedBlog(data.blog))
+            } 
+        }catch (err) { 
+            console.log(err)
             toast.error(err.response.data.message || "An error occurred")
         }
     }
 
     useEffect(()=>{
         fetchBlogById()
+        if(navigationType == 'POP'){
+            return ()=>{
+                dispatch(removeSelectedBlog())
+            }
+        }
     },[])
     
 
@@ -60,7 +74,9 @@ function BlogPage() {
                 </div>
                 <div></div>
                 <div className='w-full flex items-center justify-center'>
-                    <Link to={`/edit/${blogData.blogId}` } className='bg-blue-600 hover:bg-blue-700 w-1/3 my-5 text-white font-semibold text-lg rounded-md px-5 py-2'>Edit Blog</Link>
+                    {
+                        token && user.email == blogData.creater.email && <Link to={`/edit/${blogData.blogId}` } className='bg-blue-600 hover:bg-blue-700 w-1/3 my-5 text-white font-semibold text-lg rounded-md px-5 py-2 flex items-center justify-center'>Edit Blog</Link>
+                    }
                 </div>    
             </div> : <h1>Loading....</h1>
         }

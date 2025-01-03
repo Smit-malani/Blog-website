@@ -1,7 +1,9 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { login } from '../utils/slices/userSlice'
 
 function UserLogin() {
     const[user,setUser] = useState({})
@@ -9,6 +11,10 @@ function UserLogin() {
     const[email,setEmail] = useState('')
     const[password, setPassword] = useState('')
     const navigate = useNavigate()
+
+    const dispatch = useDispatch()
+
+
     async function submitHandler(e){
       e.preventDefault()  
       const userData = {
@@ -21,8 +27,7 @@ function UserLogin() {
         if(res.status === 200){
           const data = res.data
           setUser(data.user)
-          localStorage.clear()
-          localStorage.setItem("user", JSON.stringify(data.user))
+          dispatch(login(data.user))
           toast.success("Account Logged-In successfully")
           navigate('/')
         }        
