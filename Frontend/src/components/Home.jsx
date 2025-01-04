@@ -24,12 +24,12 @@ function Home() {
         fetchBlogs()
     })    
   return (
-    <div className='mt-9 w-[65%]'>
+    <div className='mt-28 w-[65%]'>
         {
             blogs.map((blog ,index)=>{
                 return (
                     <Link key={index} to={`blog/${blog.blogId}`}>
-                        <div  className='w-full border-b-[1px] border-[#c2c2c2] pb-9 flex items-center justify-start gap-3 mt-10'>
+                        <div  className='w-full border-b-[1px]  border-[#e1e1e1] pb-9 flex items-center justify-start gap-3 mt-10'>
                         <div className='w-[65%] flex flex-col justify-start items-start gap-6 px-12'>
                             <div className='flex items-center gap-3 cursor-pointer'>
                                 <div className='h-6 w-6 bg-green-200 rounded-full'>

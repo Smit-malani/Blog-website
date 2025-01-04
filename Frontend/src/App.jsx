@@ -10,7 +10,7 @@ import BlogPage from './Pages/BlogPage'
 function App() {
  
   return (
-    <div className='bg-[#f1f1f1] w-screen h-screen overflow-x-hidden'>
+    <div className='bg-white w-screen h-screen overflow-x-hidden'>
       <Routes>
         <Route path='/' element={<Navbar/>}>
           <Route path='/' element={<Home/>}></Route>

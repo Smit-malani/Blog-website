@@ -40,7 +40,7 @@ function UserSignup(){
 
 
     return (
-        <div className='w-screen h-screen flex items-center justify-start mt-16 flex-col gap-3'>
+        <div className='w-screen h-screen flex items-center justify-start mt-28 flex-col gap-3'>
           <form onSubmit={(e)=>submitHandler(e)} className='flex flex-col w-full items-center gap-10 lg:w-1/2 md:w-full'>
               <h1 className='text-4xl font-bold'>Sign up</h1>
               <div className='flex flex-col w-1/2 gap-4'>

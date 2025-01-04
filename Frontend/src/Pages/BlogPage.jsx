@@ -63,10 +63,10 @@ function BlogPage() {
     
 
   return (
-    <div className='w-full min-h-screen flex justify-center'>
+    <div className='w-full min-h-screen flex justify-center mt-28'>
         {
             blogData ? <div className='w-[55%] h-full flex flex-col'>
-                <div className='title mt-12 w-full '>
+                <div className='title w-full '>
                     <h1 className='font-bold text-4xl opacity-80'>{blogData.title}</h1>
                 </div>
                 <div className='profile flex items-center justify-start w-full mt-8 gap-4'>

@@ -72,7 +72,7 @@ useEffect(()=>{
 },[id])
 
   return (
-    <div className='w-screen h-screen flex items-start mt-7 justify-center'>
+    <div className='w-screen h-screen flex items-start mt-28  justify-center'>
       <form onSubmit={(e)=>submitHandler(e)} className='flex flex-col w-full items-center gap-10 lg:w-1/2 md:w-full'>
         <h1 className='text-4xl font-bold'>{id ? "Edit Blog" : "Create Blog"}</h1>
           <div className='flex flex-col w-1/2 gap-4'>
